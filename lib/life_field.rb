@@ -1,4 +1,4 @@
-require './bitarray.rb'
+require File.join( File.dirname( __FILE__), 'bit_array.rb' )
 
 class LifeField
 

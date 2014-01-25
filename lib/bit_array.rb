@@ -9,44 +9,48 @@
 class BitArray
 
   public
+  
 
   def initialize(array_size = 0, bit_width = 1)
     @bit_width = bit_width
-
-    @_life_cell_object_data_block_ = 0
-    @_life_cell_object_data_block_len = array_size
+    @data_ = 0
+    @data_len = array_size
   end
 
   def [](index)
-    if (index >= @_life_cell_object_data_block_len) then return nil end
-    return ( @_life_cell_object_data_block_ & ( ((2 ** @bit_width)-1) << (index * @bit_width) ) ) >> (index * @bit_width)
+    if (index >= @data_len) then
+      return nil
+    end
+
+    return ( @data_ & ( ((2 ** @bit_width)-1) << (index * @bit_width) ) ) >> (index * @bit_width)
   end
 
   def []=(index,data)
 
     # TODO: What if some bastard wants to toss in an Array of Strings!?!!
     case data.class.to_s # allow us to handle various types for data
-      when "Fixnum"
-        data_array = Array.new.push(data)
-      when "Bignum"
-        data_array = Array.new.push(data)
+      when "Fixnum", "BigNum"
+        data_array = ( Array.new ).push(data)
       when "String"
         data_array = Array.new
         data.reverse.unpack('B*').each do |loop_val| data_array.push(loop_val) end
     end # no need for an else here...
 
-    @_life_cell_object_data_block_len = (index+1) if (index > @_life_cell_object_data_block_len)
+    @data_len = (index+1) if (index > @data_len)
     data_array.each do |loop_val|
-      @_life_cell_object_data_block_ = ( (loop_val & ((2 ** @bit_width)-1)) << (index * @bit_width) ) | (@_life_cell_object_data_block_ & ~( ((2 ** @bit_width)-1) << (index * @bit_width) ))
-      @_life_cell_object_data_block_len = @_life_cell_object_data_block_len + 1
+      @data_ = ( (loop_val & ((2 ** @bit_width)-1)) << (index * @bit_width) ) | (@data_ & ~( ((2 ** @bit_width)-1) << (index * @bit_width) ))
+      @data_len = @data_len + 1
     end
   end
 
   def fill( fill_value )
     # TODO: Why does the follwoing line of code hang the program?!?!
-    #@_life_cell_object_data_block_len.times do |index|  puts "#{ index }";  self[index] = value end
+    #@data_len.times do |index|  puts "#{ index }";  self[index] = value end
   end
 
+  def width
+    return @bit_width
+  end
 
   # ----------------------------------------------------------------
   # the following code is meant only to get BitArray to function exactly like Array without 
@@ -56,7 +60,7 @@ class BitArray
 
     def _data
       retval = Array.new
-      @_life_cell_object_data_block_len.times do |loop_val| retval.push(self[loop_val]) end
+      @data_len.times do |loop_val| retval.push(self[loop_val]) end
       return retval
     end
     alias :_data= :[]=
@@ -71,13 +75,12 @@ class BitArray
     end
 
     def inspect
-      _data.inspect
+      return _data.inspect
     end
 
     def length
-      _data.length
+      return _data.length
     end
-    alias :size :length
 
 
   # ----------------------------------------------------------------

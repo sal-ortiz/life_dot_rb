@@ -16,7 +16,7 @@
 #   * how about getting instances of this to communicate with other instances of itself and act within a cluster (...and better yet, do it without needing a master node)
 #
 
-require './lifefield.rb'
+require File.join( File.dirname( __FILE__ ), 'lib', 'life_field.rb' )
 
 class Life
 

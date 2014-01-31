@@ -2,6 +2,9 @@ require File.join( File.dirname( __FILE__), 'bit_array.rb' )
 
 class LifeField
 
+  attr_reader :width
+  attr_reader :height
+
   def initialize(field_width, field_height)
 	  @data = BitArray.new( (field_width * field_height), 2 )
 

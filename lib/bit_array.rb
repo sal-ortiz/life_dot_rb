@@ -42,6 +42,10 @@ class BitArray
       return @bit_width
     end
 
+    def inspect
+      return data.inspect
+    end
+
 
   # ----------------------------------------------------------------
   # the following code is meant only to get BitArray to function exactly like Array without 

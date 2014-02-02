@@ -2,33 +2,46 @@ require File.join( File.dirname( __FILE__), 'bit_array.rb' )
 
 class LifeField
 
+
+  BIT_WIDTH = 2 
+
   attr_reader :width
   attr_reader :height
+  #attr_reader :data
 
-  def initialize(field_width, field_height)
-	  @data = BitArray.new( (field_width * field_height), 2 )
+  def data
+    return @data.data
+  end
+
+  def initialize( field_width, field_height )
+	  @data = BitArray.new( (field_width * field_height), BIT_WIDTH )
 
     @width = field_width
     @height = field_height
-
-    # initialize an empty field.
-    @data.fill(0)  # this may take a while for larger fields.
-
   end
 
-  def data
-    @data
+
+  def getCell( xPos, yPos )
+    index = ( yPos * @width ) + xPos
+    return @data[ index ]
   end
 
-  def randomize(num_cells)
-    srand
+  def setCell( xPos, yPos, val )
+    index = ( yPos * @width ) + xPos
+    return @data[ index ] = val
+  end
+
+
+  def randomize( num_cells )
+    srand( Time.now.to_i )
 
     until num_cells.zero? do
-      current_index = rand( @width*@height )
+      current_index = rand( @width ) * rand( @height )  # theoretically higher level of entropy.
+      #current_index = rand( @width * @height )          # less code generated, faster runtime.
 
       if @data[current_index].zero? then
         @data[current_index] = 1
-        num_cells-=1
+        num_cells -= 1
       end
 
     end

@@ -24,10 +24,8 @@ class BitArray
     end
 
     def []=( index, val )
-      if [Fixnum, BigNum].include?( data.class ) then
-        data_array = data
-        data_array[index] = val
-      end
+      data_array = data
+      data_array[index] = val.to_i
 
       BitArrayHelper.pack_array( data_array )
       return val

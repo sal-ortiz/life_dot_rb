@@ -27,7 +27,7 @@ class BitArray
       data_array = data
       data_array[index] = val.to_i
 
-      BitArrayHelper.pack_array( data_array, @bit_width )
+      @data = BitArrayHelper.pack_array( data_array, @bit_width )
       return val
     end
     alias :data= :[]=

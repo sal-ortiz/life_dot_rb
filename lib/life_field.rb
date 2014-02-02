@@ -33,17 +33,16 @@ class LifeField
 
 
   def randomize( num_cells )
-    srand( Time.now.to_i )
+    # num cells should be less than the total number of spaces (width*height)!
 
+    srand
     until num_cells.zero? do
-      current_index = rand( @width ) * rand( @height )  # theoretically higher level of entropy.
-      #current_index = rand( @width * @height )          # less code generated, faster runtime.
+      current_index = ( (rand*@width) * (rand*@height) ).to_i
 
       if @data[current_index].zero? then
         @data[current_index] = 1
         num_cells -= 1
       end
-
     end
   end
 

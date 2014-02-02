@@ -50,13 +50,7 @@ describe "a LifeField object" do
       field.randomize( DEFAULT_NUM_CELLS )
       another_field.randomize( DEFAULT_NUM_CELLS )
 
-      is_unique = nil
-      field.data.each_index do |index|
-        is_unique = true and break if !is_unique && ( field.data[index] != another_field.data[index] )
-      end
-
-      expect( is_unique ).to be_true
-
+      expect( field.data ).not_to be_a_duplicate_array_of( another_field.data )
     end # it "should initialize an object given a field width and height"
 
   end # describe "the LifeField::randomize method"

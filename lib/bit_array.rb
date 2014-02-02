@@ -27,7 +27,7 @@ class BitArray
       data_array = data
       data_array[index] = val.to_i
 
-      BitArrayHelper.pack_array( data_array )
+      BitArrayHelper.pack_array( data_array, @bit_width )
       return val
     end
     alias :data= :[]=
@@ -57,10 +57,12 @@ class BitArray
 
     def method_missing(method, *args, &block)
       array_data = data
-      if array_data.respond_to?( method ) then
-        return array_data.send(method, *args)
+      if array_data.respond_to?( method.to_sym ) then
+        return array_data.send( method.to_sym, *args )
+      elsif self.send.respond_to?( method.to_sym )
+        return self.send( method.to_sym, *args )
       else
-        return self.send(method, *args)
+        super
       end
     end
 

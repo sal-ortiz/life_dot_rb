@@ -1,3 +1,6 @@
+require File.join( File.dirname( __FILE__ ), 'bit_array_helper.rb' )
+
+
 # Bitarray is meant to behave exactly like Array, but the data is stored in bit-delimited values.
 #  it's intended to allow us to control the size of our data.  
 #  For example, our game-of-life algorithm require only 2 bits per cell, 
@@ -9,79 +12,55 @@
 class BitArray
 
   public
-  
 
-  def initialize(array_size = 0, bit_width = 1)
-    @bit_width = bit_width
-    @data_ = 0
-    @data_len = array_size
-  end
-
-  def [](index)
-    if (index >= @data_len) then
-      return nil
+    def initialize( array_size = 0, bit_width = 1 )
+      @bit_width = bit_width
+      @data = 0
+      @data_len = array_size
     end
 
-    return ( @data_ & ( ((2 ** @bit_width)-1) << (index * @bit_width) ) ) >> (index * @bit_width)
-  end
-
-  def []=(index,data)
-
-    # TODO: What if some bastard wants to toss in an Array of Strings!?!!
-    case data.class.to_s # allow us to handle various types for data
-      when "Fixnum", "BigNum"
-        data_array = ( Array.new ).push(data)
-      when "String"
-        data_array = Array.new
-        data.reverse.unpack('B*').each do |loop_val| data_array.push(loop_val) end
-    end # no need for an else here...
-
-    @data_len = (index+1) if (index > @data_len)
-    data_array.each do |loop_val|
-      @data_ = ( (loop_val & ((2 ** @bit_width)-1)) << (index * @bit_width) ) | (@data_ & ~( ((2 ** @bit_width)-1) << (index * @bit_width) ))
-      @data_len = @data_len + 1
+    def []( index )
+      return (index < @data_len) ? data[ index ] : nil
     end
-  end
 
-  def fill( fill_value )
-    # TODO: Why does the follwoing line of code hang the program?!?!
-    #@data_len.times do |index|  puts "#{ index }";  self[index] = value end
-  end
+    def []=( index, val )
+      if [Fixnum, BigNum].include?( data.class ) then
+        data_array = data
+        data_array[index] = val
+      end
 
-  def width
-    return @bit_width
-  end
+      BitArrayHelper.pack_array( data_array )
+      return val
+    end
+    alias :data= :[]=
+
+    def fill( val )
+      @data = ( Array.new( @data_len ) ).fill( val )
+    end
+
+    def width
+      return @bit_width
+    end
+
 
   # ----------------------------------------------------------------
   # the following code is meant only to get BitArray to function exactly like Array without 
   #  actually rewriting, overriding, or extending the Ruby Array class.
   #  You should NOT call these members of BitArray directly.
-    private
+  private
 
-    def _data
-      retval = Array.new
-      @data_len.times do |loop_val| retval.push(self[loop_val]) end
-      return retval
+    def data
+      return BitArrayHelper.unpack_array( @data, @data_len, @bit_width )
     end
-    alias :_data= :[]=
 
     def method_missing(method, *args, &block)
-      if _data.respond_to?( method ) then
-        _data.send(method, *args)
-        _data.each_index do |loop_val|  self[loop_val] = _data[loop_val] end
+      array_data = data
+      if array_data.respond_to?( method ) then
+        return array_data.send(method, *args)
       else
-        self.send(method, *args)
+        return self.send(method, *args)
       end
     end
-
-    def inspect
-      return _data.inspect
-    end
-
-    def length
-      return _data.length
-    end
-
 
   # ----------------------------------------------------------------
 

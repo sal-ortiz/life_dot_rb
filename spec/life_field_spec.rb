@@ -1,6 +1,6 @@
-require 'rspec'
-require File.join( File.dirname( __FILE__ ), '..', 'lib', 'life_field.rb' )
 
+require File.join( File.dirname( __FILE__ ), '.', 'lib', 'spec_helper.rb' )       # our spec helper.
+require File.join( File.dirname( __FILE__ ), '..', 'lib', 'life_field.rb' )       # our source code to be tested.
 
 
 describe "a LifeField object" do

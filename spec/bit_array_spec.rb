@@ -39,7 +39,16 @@ describe "a BitArray object" do
     expect{ BitArray.new( expected_len, expected_width, extra_value ) }.to raise_error( ArgumentError )
   end # it "should raise an error if more than two arguments are given"
 
+  it "should allow values to be assigned and accessed via a standard 'array-like' means" do
+    srand
+    array_len = 10
+    index = rand( array_len )
 
+    the_object = BitArray.new( array_len )
+    expect( the_object[ index ] ).to eq( 0 )
+    the_object[ index ] = 1
+    expect( the_object[ index ] ).to eq( 1 )
+  end # it "should allow values to be assigned and accessed via a standard 'array-like' means"
 
 
 

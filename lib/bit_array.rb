@@ -45,16 +45,6 @@ class BitArray
     end
 
 
-  # ----------------------------------------------------------------
-  # the following code is meant only to get BitArray to function exactly like Array without 
-  #  actually rewriting, overriding, or extending the Ruby Array class.
-  #  You should NOT call these members of BitArray directly.
-  private
-
-    def data
-      return BitArrayHelper.unpack_array( @data, @data_len, @bit_width )
-    end
-
     def method_missing(method, *args, &block)
       array_data = data
       if array_data.respond_to?( method.to_sym ) then
@@ -65,6 +55,11 @@ class BitArray
         super
       end
     end
+
+    def data
+      return BitArrayHelper.unpack_array( @data, @data_len, @bit_width )
+    end
+
 
   # ----------------------------------------------------------------
 

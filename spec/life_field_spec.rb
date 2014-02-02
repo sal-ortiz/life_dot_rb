@@ -19,9 +19,12 @@ describe "a LifeField object" do
     expect( field.height ).to eq( test_height )
   end # it "should initialize an object given a field width and height"
 
-  it "should initialize an empty field object of a given a width and height" do
-    expect( field.data ).to be_instance_of( BitArray )
-    expect( field.data ).to be_empty
+  it "should initialize an empty field data object of a given a width and height" do
+    bad_values = [1, 2, 3]  # values in field.data for which our tests fail.
+
+    expect( field.data ).to be_instance_of( Array )
+    expect( field.data ).to_not be_empty
+    expect( field.data ).not_to include( *bad_values )
   end # it "should initialize an object given a field width and height"
 
 

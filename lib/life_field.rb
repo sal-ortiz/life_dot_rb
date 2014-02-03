@@ -7,7 +7,6 @@ class LifeField
 
   attr_reader :width
   attr_reader :height
-  #attr_reader :data
 
   def data
     return @data.data

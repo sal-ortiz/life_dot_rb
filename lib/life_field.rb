@@ -1,4 +1,8 @@
-require File.join( File.dirname( __FILE__), 'bit_array.rb' )
+require File.join( File.dirname( __FILE__ ), 'bit_array.rb' )
+require File.join( File.dirname( __FILE__ ), 'life_field_helper.rb' )
+
+
+
 
 class LifeField
 
@@ -45,15 +49,31 @@ class LifeField
     end
   end
 
-  def neighbors( center_x, center_y )
-    # TODO: Besides cleaning up your ruby code...this algorithm might be broken, fix it.
+  def neighbors( center_x, center_y, wrap=true )
     retval = Array.new 
     field_index = ( center_y * @width ) + center_x
 
-    [8,7,6,5,3,2,1,0].each do |loop_val|
-      current_field_index = ( ((((field_index / @width) + ((loop_val/3)-1)) % @height) * @width) + (((field_index % @width)+((loop_val % 3)-1)) % @width) )
-      # NOTE: FOR AN "INFINITE" FIELD: this code binds our field vertically ^^^^^^^^^             ...and this code binds our field horizontally ^^^^^^^^
-      if (1..2).include?(@data[current_field_index]) then retval.push(current_field_index) end
+    [8,7,6,5,3,2,1,0].each do |loop_val|  # we skip 4 because, given our algorithm, it will point us to our center cell.
+  
+      cell_pos_x = center_x + ( ( loop_val % 3) - 1 )    # our cell's x position, with a -1 to 1 modifier, adjusted for wraparound.
+      cell_pos_y = center_y + ( ( loop_val / 3 ) - 1 )   # our cell's y position, with a -1 to 1 modifier, adjusted for wraparound.
+
+      if( wrap ) then
+        # adjust our coordinates for field wraparound...
+        cell_pos_x %= @width
+        cell_pos_y %= @height
+      elsif LifeFieldHelper.withing_field?( cell_pos_x, cell_pos_y, @width, @height ) then
+        # ...otherwise, keep our calculations to within our field.
+        next
+      end
+      current_field_index = LifeFieldHelper.coord_to_index( cell_pos_x, cell_pos_y, @width, @height )   # our coordinates converted to a single-dimensional array index.
+
+      # if our calculated position points to a live cell, 
+      # then we add it to our list of neighbors.
+      if (1..2).include?( @data[ current_field_index ] ) then
+        retval.push( {  :x => cell_pos_x,
+                        :y => cell_pos_y    } )
+      end
     end
 
     return retval

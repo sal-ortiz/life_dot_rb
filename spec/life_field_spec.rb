@@ -95,18 +95,85 @@ describe "a LifeField object" do
 
     end # it "should correctly count a cell's neighbors in the middle of the field"
 
-
     it "should wrap horizontally across the field when counting a cell's neighbors at the left edge of the field" do
+      cell_pos_x = 0
+      cell_pos_y = DEFAULT_HEIGHT / 2
+      field.setCell( cell_pos_x, cell_pos_y, 1 )
+      expected_value = 0;
+
+      [ (DEFAULT_WIDTH-1), 0, 1 ].each do |x_modifier|
+        (-1..1).each do |y_modifier|
+          unless ( x_modifier == 0 && y_modifier == 0 ) then
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test prior to adding a new neighbor.
+            field.setCell( cell_pos_x+x_modifier, cell_pos_y+y_modifier, 1 )                      # add a new neighbor.
+
+            expected_value += 1                                                                   # update our expectation.
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test for our updated expecations.
+          end
+        end
+      end
+
     end # it "should wrap horizontally across the field when counting a cell's neighbors at the left edge of the field"
 
     it "should wrap horizontally across the field when counting a cell's neighbors at the right edge of the field" do
+      cell_pos_x = DEFAULT_WIDTH - 1
+      cell_pos_y = DEFAULT_HEIGHT / 2
+      field.setCell( cell_pos_x, cell_pos_y, 1 )
+      expected_value = 0;
+
+      [-1, 0, -(DEFAULT_WIDTH-1) ].each do |x_modifier|
+        (-1..1).each do |y_modifier|
+          unless ( x_modifier == 0 && y_modifier == 0 ) then
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test prior to adding a new neighbor.
+            field.setCell( cell_pos_x+x_modifier, cell_pos_y+y_modifier, 1 )                      # add a new neighbor.
+
+            expected_value += 1                                                                   # update our expectation.
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test for our updated expecations.
+          end
+        end
+      end
+
     end # it "should wrap horizontally across the field when counting a cell's neighbors at the right edge of the field"
 
 
     it "should wrap vertically across the field when counting a cell's neighbors at the upper edge of the field" do
+      cell_pos_x = DEFAULT_WIDTH / 2
+      cell_pos_y = 0
+      field.setCell( cell_pos_x, cell_pos_y, 1 )
+      expected_value = 0;
+
+      (-1..1).each do |x_modifier|
+        [ (DEFAULT_HEIGHT-1), 0, 1 ].each do |y_modifier|
+          unless ( x_modifier == 0 && y_modifier == 0 ) then
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test prior to adding a new neighbor.
+            field.setCell( cell_pos_x+x_modifier, cell_pos_y+y_modifier, 1 )                      # add a new neighbor.
+
+            expected_value += 1                                                                   # update our expectation.
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test for our updated expecations.
+          end
+        end
+      end
+
     end # it "should wrap vertically across the field when counting a cell's neighbors at the upper edge of the field"
 
     it "should wrap vertically across the field when counting a cell's neighbors at the lower edge of the field" do
+      cell_pos_x = DEFAULT_WIDTH / 2
+      cell_pos_y = DEFAULT_HEIGHT - 1
+      field.setCell( cell_pos_x, cell_pos_y, 1 )
+      expected_value = 0;
+
+      (-1..1).each do |x_modifier|
+        [ -1, 0, -(DEFAULT_HEIGHT-1) ].each do |y_modifier|
+          unless ( x_modifier == 0 && y_modifier == 0 ) then
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test prior to adding a new neighbor.
+            field.setCell( cell_pos_x+x_modifier, cell_pos_y+y_modifier, 1 )                      # add a new neighbor.
+
+            expected_value += 1                                                                   # update our expectation.
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test for our updated expecations.
+          end
+        end
+      end
+
     end # it "should wrap vertically across the field when counting a cell's neighbors at the lower edge of the field"
 
   end # describe "the LifeField::neighbors method"

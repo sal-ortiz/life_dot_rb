@@ -76,6 +76,23 @@ describe "a LifeField object" do
   describe "the LifeField::neighbors method" do
 
     it "should correctly count a cell's neighbors in the middle of the field" do
+      cell_pos_x = DEFAULT_WIDTH / 2
+      cell_pos_y = DEFAULT_HEIGHT / 2
+      field.setCell( cell_pos_x, cell_pos_y, 1 )
+      expected_value = 0;
+
+      (-1..1).each do |x_modifier|
+        (-1..1).each do |y_modifier|
+          unless ( x_modifier == 0 && y_modifier == 0 ) then
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )                 # test prior to adding a new neighbor.
+            field.setCell( cell_pos_x+x_modifier, cell_pos_y+y_modifier, 1 )   # add a new neighbor.
+
+            expected_value += 1                                               # update our expectation.
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )                 # test for our updated expecations.
+          end
+        end
+      end
+
     end # it "should correctly count a cell's neighbors in the middle of the field"
 
 

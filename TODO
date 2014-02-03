@@ -1,0 +1,2 @@
+* add unit tests to validate the LifeField::neighbors method's third parameter, meant to get it to not wrap around.
+* fix the life.rb and write some tests for it.

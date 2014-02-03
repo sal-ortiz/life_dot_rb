@@ -84,11 +84,11 @@ describe "a LifeField object" do
       (-1..1).each do |x_modifier|
         (-1..1).each do |y_modifier|
           unless ( x_modifier == 0 && y_modifier == 0 ) then
-            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )                 # test prior to adding a new neighbor.
-            field.setCell( cell_pos_x+x_modifier, cell_pos_y+y_modifier, 1 )   # add a new neighbor.
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test prior to adding a new neighbor.
+            field.setCell( cell_pos_x+x_modifier, cell_pos_y+y_modifier, 1 )                      # add a new neighbor.
 
-            expected_value += 1                                               # update our expectation.
-            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )                 # test for our updated expecations.
+            expected_value += 1                                                                   # update our expectation.
+            expect( field.neighbors( cell_pos_x, cell_pos_y ).length ).to eq( expected_value )    # test for our updated expecations.
           end
         end
       end

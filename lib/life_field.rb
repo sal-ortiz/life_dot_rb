@@ -46,9 +46,10 @@ class LifeField
     end
   end
 
-  def neighbors( field_index )
+  def neighbors( center_x, center_y )
     # TODO: Besides cleaning up your ruby code...this algorithm might be broken, fix it.
     retval = Array.new 
+    field_index = ( center_y * @width ) + center_x
 
     [8,7,6,5,3,2,1,0].each do |loop_val|
       current_field_index = ( ((((field_index / @width) + ((loop_val/3)-1)) % @height) * @width) + (((field_index % @width)+((loop_val % 3)-1)) % @width) )

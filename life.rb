@@ -60,8 +60,10 @@ class Life
 
     # this is where the actual 'life' logic happens...
     ( @field_width * @field_height ).times do |loop_val|
-      num_neighbors = @field.neighbors(loop_val).length
-        case num_neighbors
+      num_neighbors = @field.neighbors( LifeFieldHelper.index_to_coord(loop_val,@field_width)[:x],
+                                        LifeFieldHelper.index_to_coord(loop_val,@field_width)[:y] ).length
+
+      case num_neighbors
         when 2
           @field.data[loop_val] = if ( @field.data[loop_val] == 1 ) then 3 else 0 end
         when 3

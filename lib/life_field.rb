@@ -62,7 +62,7 @@ class LifeField
         # adjust our coordinates for field wraparound...
         cell_pos_x %= @width
         cell_pos_y %= @height
-      elsif LifeFieldHelper.withing_field?( cell_pos_x, cell_pos_y, @width, @height ) then
+      elsif LifeFieldHelper.within_field?( cell_pos_x, cell_pos_y, @width, @height ) then
         # ...otherwise, keep our calculations to within our field.
         next
       end

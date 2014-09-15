@@ -20,9 +20,9 @@ require File.join( File.dirname( __FILE__ ), 'lib', 'life_field.rb' )
 
 class Life
 
-  attr_accessor :field
-  attr_accessor :field_width
-  attr_accessor :field_height
+  attr_reader :field
+  attr_reader :field_width
+  attr_reader :field_height
 
   def initialize( field_width, field_height )
     @field = LifeField.new( field_width, field_height )
@@ -31,18 +31,6 @@ class Life
     @field_height = field_height
   end
  
-  def field
-    @field
-  end
-
-  def field_width
-    @field_width
-  end
-
-  def field_height
-    @field_height
-  end
-
   # ====== randomize our field.
   def randomize( num_cells = (@field_width * @field_height)/2 )
     num_cells = (@field_width * @field_height) if (num_cells > @field_width * @field_height)
@@ -59,17 +47,17 @@ class Life
     #   * Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
     # this is where the actual 'life' logic happens...
-    ( @field_width * @field_height ).times do |loop_val|
-      num_neighbors = @field.neighbors( LifeFieldHelper.index_to_coord(loop_val,@field_width)[:x],
-                                        LifeFieldHelper.index_to_coord(loop_val,@field_width)[:y] ).length
+    ( field_width * field_height ).times do |loop_val|
+      num_neighbors = field.neighbors(  LifeFieldHelper.index_to_coord(loop_val,field_width)[:x],
+                                        LifeFieldHelper.index_to_coord(loop_val,field_width)[:y] ).length
 
       case num_neighbors
         when 2
-          @field.data[loop_val] = if ( @field.data[loop_val] == 1 ) then 3 else 0 end
+          field.data[loop_val] = if ( field.data[loop_val] == 1 ) then 3 else 0 end
         when 3
-          @field.data[loop_val] = if ( @field.data[loop_val] == 1 ) then 3 else 2 end
+          field.data[loop_val] = if ( field.data[loop_val] == 1 ) then 3 else 2 end
         #else # this else block is redundant...an added bonus of our board logic!
-        #  @field_data[loop_val] = if ( @field_data[loop_val] == 1 ) then 1 else 0 end
+        #  field.data[loop_val] = if ( field.data[loop_val] == 1 ) then 1 else 0 end
       end
     end
 
@@ -78,8 +66,8 @@ class Life
   # ====== normalize our data to show either 'alive' or 'dead'.  This is run after processing.
   def update
     # everything needs to be either 1 or 0 after processing so let's normalize our data.
-    ( @field_width * @field_height ).times do |loop_val| 
-      @field.data[loop_val] /= 2 
+    ( field_width * field_height ).times do |loop_val|
+      field.data[loop_val] /= 2
     end
 
   end

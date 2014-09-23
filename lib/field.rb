@@ -44,20 +44,16 @@ class Field < BitArray
   end
 
 
-  def randomize( num_cells )
+  def randomize( val_range )
     # num cells should be less than the total number of spaces (width*height)!
     srand
     self.fill do |index|
-      if !num_cells.zero? && (rand < 0.5) && self[index].zero? then
-        num_cells-=1 and 1
-      else
-        0
-      end
+      val_range.to_a[ rand*val_range.to_a.length ]
     end
   end
 
 
-  def cell_count( top_coord=0, right_coord=width, bot_coord=height, left_coord=0, &block )
+  def cell_count( left_coord=0, top_coord=0, right_coord=width, bot_coord=height, &block )
 
     if block_given? then
       callback = block

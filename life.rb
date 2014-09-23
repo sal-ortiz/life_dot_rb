@@ -28,9 +28,8 @@ class Life
 
  
   # ====== randomize our field.
-  def randomize( num_cells = field.area/2 )
-    #num_cells = field.area if num_cells > field.area
-    field.randomize( num_cells )
+  def randomize
+    field.randomize( 0..1 )
   end
 
   # ====== apply our 'game of life' logic.
@@ -45,7 +44,9 @@ class Life
     # this is where the actual 'life' logic happens...
     field.area.times do |loop_val|
       loop_val_coord = FieldHelper.index_to_coord(loop_val,field.width)
-      num_neighbors = field.cell_count( loop_val_coord[:y]-1, loop_val_coord[:x]+1, loop_val_coord[:y]+1, loop_val_coord[:x]-1 ) do |val|    [1,2].include?(val)    end
+      num_neighbors = field.cell_count( loop_val_coord[:x]-1, loop_val_coord[:y]-1, loop_val_coord[:x]+1, loop_val_coord[:y]+1 ) do |val|
+        [1,2].include?(val)
+      end
       num_neighbors -= 1 unless field.cell( loop_val_coord[:x], loop_val_coord[:y] ).zero? || num_neighbors.zero?
 
       current_cell = field.cell( loop_val_coord[:x], loop_val_coord[:y] )

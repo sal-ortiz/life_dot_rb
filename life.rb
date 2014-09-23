@@ -78,17 +78,9 @@ end # class life
 
 
 # ==================================================================
+game_of_life = Life.new(30,10)
+game_of_life.randomize
 
-
-# ===== cheap and dirty data dump...
-def draw_field(game_of_life_object)
-  puts game_of_life_object.field.inspect
-end
-
-
-# ===== what ever happened to main()?
-game_of_life = Life.new(80,40)
-game_of_life.randomize( ((80*40) * 0.70) )
 
 current_day = 0
 user_inp = String.new

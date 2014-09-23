@@ -78,8 +78,10 @@ class BitArray
     end
 
     def set_value( index, val )
-      ary = self.to_a and  ary[ index ] = val
-      self.set_array( ary )
+      ary = self.to_a
+      ary[ index ] = val
+
+      set_array( ary )
       return val
     end
 

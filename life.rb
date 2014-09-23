@@ -16,25 +16,21 @@
 #   * how about getting instances of this to communicate with other instances of itself and act within a cluster (...and better yet, do it without needing a master node)
 #
 
-require File.join( File.dirname( __FILE__ ), 'lib', 'life_field.rb' )
+require File.join( File.dirname( __FILE__ ), 'lib', 'field.rb' )
 
 class Life
 
   attr_reader :field
-  attr_reader :field_width
-  attr_reader :field_height
 
   def initialize( field_width, field_height )
-    @field = LifeField.new( field_width, field_height )
-
-    @field_width = field_width
-    @field_height = field_height
+    @field = Field.new( field_width, field_height )
   end
+
  
   # ====== randomize our field.
-  def randomize( num_cells = (@field_width * @field_height)/2 )
-    num_cells = (@field_width * @field_height) if (num_cells > @field_width * @field_height)
-    @field.randomize( num_cells )
+  def randomize( num_cells = field.area/2 )
+    #num_cells = field.area if num_cells > field.area
+    field.randomize( num_cells )
   end
 
   # ====== apply our 'game of life' logic.
@@ -47,27 +43,32 @@ class Life
     #   * Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
     # this is where the actual 'life' logic happens...
-    ( field_width * field_height ).times do |loop_val|
-      num_neighbors = field.neighbors(  LifeFieldHelper.index_to_coord(loop_val,field_width)[:x],
-                                        LifeFieldHelper.index_to_coord(loop_val,field_width)[:y] ).length
+    field.area.times do |loop_val|
+      loop_val_coord = FieldHelper.index_to_coord(loop_val,field.width)
+      num_neighbors = field.cell_count( loop_val_coord[:y]-1, loop_val_coord[:x]+1, loop_val_coord[:y]+1, loop_val_coord[:x]-1 ) do |val|    [1,2].include?(val)    end
+      num_neighbors -= 1 unless field.cell( loop_val_coord[:x], loop_val_coord[:y] ).zero? || num_neighbors.zero?
 
-      case num_neighbors
+      current_cell = field.cell( loop_val_coord[:x], loop_val_coord[:y] )
+      new_cell_value = case num_neighbors
         when 2
-          field.data[loop_val] = if ( field.data[loop_val] == 1 ) then 3 else 0 end
+          if current_cell == 1 then 3 else 0 end
         when 3
-          field.data[loop_val] = if ( field.data[loop_val] == 1 ) then 3 else 2 end
+          if current_cell == 1 then 3 else 2 end
         #else # this else block is redundant...an added bonus of our board logic!
-        #  field.data[loop_val] = if ( field.data[loop_val] == 1 ) then 1 else 0 end
+        #  if field.data[loop_val] == 1 then 1 else 0 end
       end
-    end
+      field.cell( loop_val_coord[:x], loop_val_coord[:y], new_cell_value )
 
+    end
   end
 
   # ====== normalize our data to show either 'alive' or 'dead'.  This is run after processing.
   def update
     # everything needs to be either 1 or 0 after processing so let's normalize our data.
-    ( field_width * field_height ).times do |loop_val|
-      field.data[loop_val] /= 2
+    field.area.times do |loop_val|
+      loop_val_coord = FieldHelper.index_to_coord(loop_val,field.width)
+      old_value = field.cell( loop_val_coord[:x], loop_val_coord[:y] )
+      field.cell( loop_val_coord[:x], loop_val_coord[:y], old_value/2 )
     end
 
   end
@@ -80,12 +81,8 @@ end # class life
 
 # ===== cheap and dirty data dump...
 def draw_field(game_of_life_object)
-  ( game_of_life_object.field_width * game_of_life_object.field_height ).times do |loop_val|
-    print game_of_life_object.field.data[loop_val]
-    print "\n" if ( (loop_val+1) % game_of_life_object.field_width ).zero? # end-of-line?
-  end
+  puts game_of_life_object.field.inspect
 end
-
 
 
 # ===== what ever happened to main()?
@@ -95,9 +92,8 @@ game_of_life.randomize( ((80*40) * 0.70) )
 current_day = 0
 user_inp = String.new
 while user_inp.chomp.empty? do
-  puts "DAY: #{ current_day }:"
-  draw_field(game_of_life)
-  user_inp = gets
+  puts "DAY: #{ current_day }:\n#{ game_of_life.field.inspect }\n\n"
+  #user_inp = gets
 
   game_of_life.process;
   game_of_life.update; 

@@ -13,55 +13,76 @@ class BitArray
 
   public
 
-    def initialize( array_size = 0, bit_width = 1 )
-      @bit_width = bit_width
+    attr_reader :bit_width
+    attr_reader :length
+    attr_reader :data
+
+    def initialize( array_size = 0, new_bit_width = 1 )
+      @bit_width = new_bit_width
       @data = 0
-      @data_len = array_size
+      @length = array_size
     end
 
     def []( index )
-      return (index < @data_len) ? data[ index ] : nil
+      return get_value( index )
     end
 
     def []=( index, val )
-      data_array = data
-      data_array[index] = val.to_i
-
-      @data = BitArrayHelper.pack_array( data_array, @bit_width )
-      return val
+      return set_value( index, val )
     end
-    alias :data= :[]=
 
     def fill( val )
       @data = ( Array.new( @data_len ) ).fill( val )
     end
 
     def width
-      return @bit_width
+      return bit_width
     end
 
     def inspect
       return data.inspect
     end
 
+    def to_a
+      return BitArrayHelper.unpack_array( data, length, bit_width )
+    end
 
-    def method_missing(method, *args, &block)
+
+    def method_missing( method, *args, &block )
       array_data = data
       if array_data.respond_to?( method.to_sym ) then
         return array_data.send( method.to_sym, *args )
-      elsif self.send.respond_to?( method.to_sym )
+      elsif self.respond_to?( method.to_sym )
         return self.send( method.to_sym, *args )
-      else
-        super
+      elsif self.to_a.respond_to?( method.to_sym )
+        return ( self.to_a ).send( method.to_sym, *args )
+      #else
+      #  return super.send( method.to_sym, *args )
       end
-    end
-
-    def data
-      return BitArrayHelper.unpack_array( @data, @data_len, @bit_width )
     end
 
 
   # ----------------------------------------------------------------
+  private
+    def set_array( ary )
+      return @data = BitArrayHelper.pack_array( ary, bit_width )
+    end
+
+    def set_value( index, val )
+      ary = self.to_a and  ary[ index ] = val
+      self.set_array( ary )
+      return val
+    end
+
+    def get_value( index )
+      ary = self.to_a
+      return (index < length) ? ary[ index ] : nil
+    end
+
+  # ----------------------------------------------------------------
+
+
+  public
 
 end # class BitArray
 

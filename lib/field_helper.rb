@@ -1,5 +1,5 @@
 
-module LifeFieldHelper
+module FieldHelper
 
   def self.coord_to_index( x_coord, y_coord, width, height=nil )
     # height is optional because we don't actually need it.
@@ -20,4 +20,4 @@ module LifeFieldHelper
   end
 
 
-end # module LifeFieldHelper
+end # module FieldHelper

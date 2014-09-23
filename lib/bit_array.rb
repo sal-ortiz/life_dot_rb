@@ -31,8 +31,17 @@ class BitArray
       return set_value( index, val )
     end
 
-    def fill( val )
-      @data = ( Array.new( @data_len ) ).fill( val )
+    def fill( val=nil, &block )
+      ary = if block_given? then
+        index = 0
+        ( Array.new(length) ).map do |val|
+          index += 1 and val = block.call( index-1 )
+        end
+      else
+        Array.new( length, val )
+      end
+
+      return set_array( ary )
     end
 
     def width

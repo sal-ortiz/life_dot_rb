@@ -86,7 +86,7 @@ current_day = 0
 user_inp = String.new
 while user_inp.chomp.empty? do
   puts "DAY: #{ current_day }:\n#{ game_of_life.field.inspect }\n\n"
-  #user_inp = gets
+  user_inp = gets
 
   game_of_life.process;
   game_of_life.update; 

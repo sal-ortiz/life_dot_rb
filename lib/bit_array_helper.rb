@@ -27,4 +27,15 @@ module BitArrayHelper
     return unpacked_data
   end
 
+  def self.set_array_cache( ary )
+    return @cached_array_data = {
+      :data => ary,
+      :timestamp => Time.now }
+  end
+
+  def self.get_array_cache
+    return @cached_array_data
+  end
+
+
 end # module BitArrayHelper

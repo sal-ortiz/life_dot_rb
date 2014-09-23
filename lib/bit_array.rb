@@ -13,6 +13,9 @@ class BitArray
 
   public
 
+    CACHE_DATA_MAX_AGE = 7      # in seconds
+    CACHE_DATA_ENABLED = true   # true or false
+
     attr_reader :bit_width
     attr_reader :length
     attr_reader :data
@@ -21,6 +24,8 @@ class BitArray
       @bit_width = new_bit_width
       @data = 0
       @length = array_size
+
+      BitArrayHelper.set_array_cache( self.to_a ) if CACHE_DATA_ENABLED
     end
 
     def []( index )
@@ -74,6 +79,7 @@ class BitArray
   # ----------------------------------------------------------------
   private
     def set_array( ary )
+      BitArrayHelper.set_array_cache( ary ) if CACHE_DATA_ENABLED
       return @data = BitArrayHelper.pack_array( ary, bit_width )
     end
 
@@ -81,12 +87,21 @@ class BitArray
       ary = self.to_a
       ary[ index ] = val
 
+      BitArrayHelper.set_array_cache( ary ) if CACHE_DATA_ENABLED
       set_array( ary )
       return val
     end
 
     def get_value( index )
-      ary = self.to_a
+      cached_data = BitArrayHelper.get_array_cache if CACHE_DATA_ENABLED
+      ary = if CACHE_DATA_ENABLED &&
+               (cached_data[:timestamp] + CACHE_DATA_MAX_AGE) > Time.now
+            then
+              cached_data[:data]
+            else
+              self.to_a
+            end
+
       return (index < length) ? ary[ index ] : nil
     end
 

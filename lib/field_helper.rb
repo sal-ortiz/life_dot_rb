@@ -14,7 +14,6 @@ module FieldHelper
     }
   end
 
-
   def self.within_field?( x_coord, y_coord, width, height )
     return ( 0...width ).include?( x_coord ) && ( 0...height ).include?( y_coord )
   end

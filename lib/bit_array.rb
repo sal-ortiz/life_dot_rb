@@ -14,7 +14,7 @@ class BitArray
   public
 
     CACHE_DATA_MAX_AGE = 7      # in seconds
-    CACHE_DATA_ENABLED = true   # true or false
+    CACHE_DATA_ENABLED = false  # true or false
 
     attr_reader :bit_width
     attr_reader :length
